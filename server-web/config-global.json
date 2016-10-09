@@ -1,0 +1,9 @@
+{
+	"ports": {
+		"login": 45600,
+		"web": 45700
+	},
+	"web": {
+		"dataDirectory" : "/ressources"
+	}
+}
