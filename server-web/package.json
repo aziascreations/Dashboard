@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "file-exists": "^2.0.0",
+    "jsock": "0.0.3",
     "socket.io": "^1.5.0",
     "string": "^3.3.1"
   }

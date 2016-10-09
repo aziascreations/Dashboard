@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="author" content="Herwin Bozet">
+		<meta name="description" content="CHANGE-ME">
+		
+		<meta name="theme-color" content="#000000">
+		
+		<link rel="shortcut icon" href="./img/favicon.ico">
+		
+		<title>Index Page</title>
+		
+		<link rel="stylesheet" href="./css/reset.css" />
+		<link rel="stylesheet" href="./css/spinner-index.css" />
+		<link rel="stylesheet" href="./css/style-common.css" /><!---->
+		<link rel="stylesheet" href="./css/style-index.css" /><!---->
+		
+		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script src="./js/jquery-3.1.1.min.js"></script>
+		<script>
+			//???
+		</script>
+	</head>
+
+	<body>
+		<div id="container-indexSpinner" class="container">
+			<svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+				<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+			</svg>
+		</div>
+		
+		<script>
+			var socket = io();
+			
+			$(document).ready(function() {
+				
+			});
+			
+			function setCookie(cname, cvalue, exdays) {
+				var d = new Date();
+				d.setTime(d.getTime() + (exdays*24*60*60*1000));
+				var expires = "expires="+d.toUTCString();
+				document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+			
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for(var i = 0; i < ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0) == ' ') {
+						c = c.substring(1);
+					}
+					if (c.indexOf(name) == 0) {
+						return c.substring(name.length, c.length);
+					}
+				}
+				return "";
+			}
+			
+			function checkCookie() {
+				var user = getCookie("username");
+				if (user != "") {
+					alert("Welcome again " + user);
+				} else {
+					user = prompt("Please enter your name:", "");
+					if (user != "" && user != null) {
+						setCookie("username", user, 365);
+					}
+				}
+			}
+		</script>
+	</body>
+</html>

@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 
-console.log(getFormattedTime() + " Starting daily token cleanup...");
+console.log(getFormattedTime() + ": Starting daily token cleanup...");
 
 var con = mysql.createConnection({
 	host: "localhost",
@@ -11,11 +11,11 @@ var con = mysql.createConnection({
 
 con.connect(function(err){
 	if(err) {
-		console.log(getFormattedTime() + " An error occured while trying to connect to the database.");
+		console.log(getFormattedTime() + ": An error occured while trying to connect to the database.");
 		console.log(err);
 		return;
 	}
-	console.log(getFormattedTime() + " Connection established.");
+	console.log(getFormattedTime() + ": Connection established.");
 	onConnected();
 });
 
@@ -24,12 +24,12 @@ function onConnected() {
 		if(err) {
 			console.log(err);
 		} else {
-			console.log(getFormattedTime() + " Successfully cleaned all the users tokens");
+			console.log(getFormattedTime() + ": Successfully cleaned all the users tokens");
 		}
 	});
 	
 	con.end(function(err) {
-		console.log(getFormattedTime() + " Closing connection...");
+		console.log(getFormattedTime() + ": Closing connection...");
 	});
 }
 
