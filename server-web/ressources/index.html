@@ -7,7 +7,7 @@
 		
 		<meta name="theme-color" content="#000000">
 		
-		<link rel="shortcut icon" href="./img/favicon.ico">
+		<link rel="shortcut icon" href="./img/ico/favicon_alt.ico">
 		
 		<title>Index Page</title>
 		
@@ -33,8 +33,12 @@
 		<script>
 			var socket = io();
 			
+			//Move socket related things in a "onConnect" event.
 			$(document).ready(function() {
-				
+				//console.log("Socket.Id: %s", socket.id)
+				console.log("username -> " + getCookie("username"));
+				console.log("token -> " + getCookie("token"));
+				console.log("expires -> " + getCookie("expires"));
 			});
 			
 			function setCookie(cname, cvalue, exdays) {

@@ -13,9 +13,10 @@ var WebSocket = require('ws')
 
 ws.on('open', function() {
 	console.log(getFormattedTime() + ": Connection established");
-    ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{username:"cleanertest1", token:"abc123"}}));
+    ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{username:"cleanertest2", token:"abc123"}}));
     ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{username:"cleanertest1"}}));
-    ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{token:"abc123"}}));
+    ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{token:"abc123"}, senderData: "HOOOooo 123"}));
+    ws.send(JSON.stringify({type:"request", requestType:"tokenValidity", requestData:{username:"cleanertest1", token:"abc123"}, senderData: "HOOOooo 123"}));
     //ws.send(JSON.stringify({requestType:"tokenValidity", requestData:{username:"cleanertest1", token:"abc123"}})); //error test1
 });
 

@@ -1,13 +1,17 @@
-var fs = require('fs');
-var mysql = require("mysql");
-//var jsock = require('jsock');
-//var net = require('net');
-var WebSocketServer = require('ws').Server;
+/*
+ * [TEXT]
+ */
 
 console.log(getFormattedTime() + ": Starting login server...");
 
+var fs = require('fs');
+var mysql = require("mysql");
+var WebSocketServer = require('ws').Server;
+
+console.log(getFormattedTime() + ": Loading config-global.json");
 var config = {};
 config.global = JSON.parse(fs.readFileSync("./config-global.json"));
+
 var wss = new WebSocketServer({port: config.global.ports.login});
 //var clients = {}
 
@@ -79,6 +83,7 @@ function postDatabaseConnection() {
 	//checkTokenValidity("cleanertest2", null);
 }
 
+//TODO:Clean this shit
 function checkTokenValidity(client, data) {
 	var isTokenValid = false;
 	var errorMessage = null;
@@ -88,16 +93,6 @@ function checkTokenValidity(client, data) {
 	} else if(data.requestData.username === undefined || data.requestData.token === undefined) {
 		errorMessage = "The username or token is undefined";
 	} else {
-		//isTokenValid = checkTokenValidity(data.requestData.username, data.requestData.token);
-		//console.log(isTokenValid);
-	}
-	
-	//TODO: Add token and username verification
-	//TODO: !Escape SQL to prevent SQL injection!
-	
-	//SELECT `token` FROM `accounts` WHERE `accounts`.`username` = "cleanertest1"
-	//Don't add the fields thingy.
-	if(errorMessage === null) {
 		con.query("SELECT `token` FROM `accounts` WHERE `accounts`.`username`=\"" + data.requestData.username + "\"", function(err, rows) {
 			if(err) {
 				console.log(getFormattedTime() + ": An error occured while trying to check a user token");
@@ -130,14 +125,22 @@ function checkTokenValidity(client, data) {
 								isTokenValid:isTokenValid,
 								username:data.requestData.username,
 								token:data.requestData.token
-							}
+							},
+							senderData:(data.senderData===null||data.senderData===undefined) ? null : data.senderData
 						}
 					)
 				);
 				//Send END
 			}
 		});
-	} else {
+	}
+	
+	//TODO: Add token and username verification
+	//TODO: !Escape SQL to prevent SQL injection!
+	
+	//SELECT `token` FROM `accounts` WHERE `accounts`.`username` = "cleanertest1"
+	//Don't add the fields thingy.
+	if(!(errorMessage === null)) {
 		client.send(
 			JSON.stringify(
 				{
@@ -149,7 +152,8 @@ function checkTokenValidity(client, data) {
 						isTokenValid:isTokenValid,
 						username:data.requestData.username,
 						token:data.requestData.token
-					}
+					},
+					senderData:(data.senderData===null||data.senderData===undefined) ? null : data.senderData
 				}
 			)
 		);
@@ -166,4 +170,15 @@ function shutdown() {
 	con.end(function(err) {
 		console.log(getFormattedTime() + ": Closing SQL connection...");
 	});
+}
+
+//Not the most safest way to do it, but it's a test.
+function generateToken() {
+    var token = "";
+    var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 8; i++ )
+        token += charset.charAt(Math.floor(Math.random() * charset.length));
+
+    return token;
 }

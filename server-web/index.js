@@ -1,21 +1,23 @@
-//var S = require('string');
-var fs = require('fs');
-var fileExists = require('file-exists');
-
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var jsock = require('jsock');
-var net = require('net');
+/*
+ * [TEXT]
+ */
 
 console.log(getFormattedTime() + ": Starting web/core server...");
 
+var fs = require('fs');
+var fileExists = require('file-exists');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+console.log(getFormattedTime() + ": Loading config-global.json");
 var config = {};
 config.global = JSON.parse(fs.readFileSync("./config-global.json"));
 
 var subServersClients = {};
 //subServersClients.login = {}; //Declare it here ?
 
+/* Web server stuff and init sequence */
 app.get('/', function(req, res) {
 	//TODO: Load special info about user.
 	//In html part, check if user is valid, else redirect index.
@@ -51,11 +53,7 @@ app.get("/js/*", function(req, res) {
 	}
 });
 
-io.on('connection', function(socket) {
-	console.log('a user connected');
-	//console.log(socket);
-});
-
+/* "init sequence" */
 http.listen(config.global.ports.web, function() {
 	console.log(getFormattedTime() + ": Server started !");
 	console.log(getFormattedTime() + ": listening on *:"+config.global.ports.web);
@@ -67,9 +65,20 @@ function connectToSubServers() {
 	console.log(getFormattedTime() + ": Connecting to sub-servers...");
 	
 	console.log(getFormattedTime() + ": Connecting to the login server at ?:" + config.global.ports.login);
-	subServersClients.login = jsock(net.createConnection(config.global.ports.login));
 	
 }
+
+/* Socket.io stuff */
+io.on('connection', function(socket) {
+	console.log(getFormattedTime() + ": User connected: id=%s", socket.id);
+	
+	socket.on('disconnect', function () {
+		console.log(getFormattedTime() + ": User disconnected: id=%s", socket.id);
+		//delete socket from map
+	});
+	
+	//save socket to map
+});
 
 /* Other functions */
 function getFormattedTime() {
